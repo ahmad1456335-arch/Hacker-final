@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>AHMADPLYZ</title>
+
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+
+body{
+ background:#000;color:#00ff41;font-family:monospace;
+ min-height:100vh;overflow-x:hidden;
+}
+
+canvas{position:fixed;inset:0;opacity:.28;pointer-events:none}
+
+.red{color:#ff3333}
+.green{color:#00ff41}
+
+button{
+ padding:12px 16px;margin:10px 8px 0 0;
+ background:#00ff41;color:#000;border:0;
+ font:bold 14px monospace;cursor:pointer;
+}
+button:hover{background:#00cc33}
+button.alt{background:transparent;color:#00ff41;border:1px solid #00ff41}
+#exitBtn{background:#ff3333;color:#fff}
+
+input,textarea{
+ width:100%;background:rgba(0,16,0,.8);
+ border:1px solid #00ff41;color:#00ff41;outline:none;
+}
+
+footer{
+ position:fixed;bottom:12px;left:0;right:0;text-align:center;
+ font-size:12px;letter-spacing:2px;color:#008f25;z-index:3;
+ pointer-events:none;
+}
+
+/* ================= GATE ================= */
+#gate{
+ position:relative;z-index:2;min-height:100vh;
+ display:flex;align-items:center;justify-content:center;padding:25px 0 50px;
+}
+
+.container{
+ width:90%;max-width:500px;padding:25px;
+ background:rgba(0,12,0,.94);border:1px solid #00ff41;
+ box-shadow:0 0 30px #00ff4140;text-align:center;
+}
+
+h1.title{font-size:clamp(27px,7vw,40px);margin-bottom:20px;text-shadow:0 0 15px #00ff41}
+
+.device{
+ border:1px solid #006b20;padding:12px;margin-bottom:20px;
+ line-height:2;font-size:13px;text-align:left;
+}
+
+.message{line-height:1.8;margin:20px 0}
+#actions{display:none}
+
+.code-box{border:1px solid #006b20;padding:18px;margin-top:20px}
+.code-box input{
+ padding:14px;margin-top:15px;font:18px monospace;text-align:center;
+}
+.code-box button{width:100%}
+#result{font-size:13px;margin-top:12px;min-height:20px}
+
+.terminal{
+ border-top:1px solid #006b20;padding-top:15px;margin-top:20px;
+ text-align:left;font-size:12px;line-height:2;color:#00bb33;
+}
+
+/* ================= PANEL ================= */
+#panel{display:none;position:relative;z-index:2;padding:20px 0 70px}
+.wrap{width:92%;max-width:700px;margin:0 auto}
+
+#panel h1{
+ text-align:center;font-size:clamp(24px,6vw,34px);
+ margin-bottom:18px;text-shadow:0 0 15px #00ff41;
+}
+
+.glass,details{
+ background:rgba(0,20,0,.55);
+ backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);
+ border:1px solid #00ff41;box-shadow:0 0 20px #00ff4130;
+ margin-bottom:16px;
+}
+.glass{padding:16px}
+.glass h2{font-size:16px;margin-bottom:10px}
+
+summary{
+ padding:14px 16px;cursor:pointer;font-weight:bold;
+ list-style:none;display:flex;justify-content:space-between;
+}
+summary::-webkit-details-marker{display:none}
+summary::after{content:"+";font-size:18px}
+details[open] summary::after{content:"–"}
+details[open] summary{border-bottom:1px solid #006b20}
+.body{padding:16px}
+
+textarea{min-height:130px;padding:12px;resize:vertical;font:13px monospace}
+
+iframe{
+ width:100%;height:220px;margin-top:12px;
+ background:#fff;border:1px solid #00ff41;
+}
+
+#emailOut{margin-top:12px;font-size:13px;line-height:1.9;word-break:break-all}
+#emailOut .k{color:#008f25}
+#emailOut .bad{color:#ff3333}
+</style>
+</head>
+
+<body>
+<canvas id="matrix"></canvas>
+
+<!-- ================= GATE ================= -->
+<div id="gate">
+ <div class="container">
+
+  <h1 class="title" id="heading">SYSTEM SCANNING</h1>
+  <p id="warning" class="red">⚠ SECURITY VERIFICATION ⚠</p>
+
+  <div class="device">
+   DEVICE: <span id="device">SCANNING...</span><br>
+   ANDROID VERSION: <span id="version">CHECKING...</span><br>
+   BROWSER: <span id="browser">CHECKING...</span><br>
+   STATUS: <span id="status">SCANNING...</span>
+  </div>
+
+  <div class="message" id="message">Initializing security system...</div>
+
+  <div id="actions">
+   <button id="continueBtn" style="display:none;width:100%">CONTINUE ➜</button>
+   <button id="exitBtn" style="display:none;width:100%">EXIT THE SOFTWARE</button>
+  </div>
+
+  <div class="code-box">
+   <h3>🔐 DIRECT ACCESS</h3>
+   <p style="font-size:12px;margin-top:8px">ENTER YOUR SECURITY ACCESS CODE</p>
+   <input type="password" id="accessCode" placeholder="ENTER CODE" autocomplete="off" maxlength="20">
+   <button id="verifyButton">VERIFY ACCESS</button>
+   <div id="result"></div>
+  </div>
+
+  <div class="terminal" id="terminal">
+   &gt; Initializing...<br>&gt; Checking device...<br>&gt; Security system active<br>&gt; Waiting...<br>&gt; _
+  </div>
+
+ </div>
+</div>
+
+<!-- ================= PANEL ================= -->
+<div id="panel">
+ <div class="wrap">
+
+  <h1>AHMADPLYZ PANEL</h1>
+
+  <!-- SANDBOX -->
+  <div class="glass">
+   <h2>🧪 SANDBOX</h2>
+   <p style="font-size:12px;margin-bottom:8px">Write HTML / CSS / JS and run it safely in an isolated box.</p>
+   <textarea id="code" spellcheck="false">&lt;h1&gt;AHMADPLYZ&lt;/h1&gt;
+&lt;p&gt;Main coding seekh raha hoon.&lt;/p&gt;</textarea>
+   <button id="runBtn">▶ RUN</button>
+   <button id="clearBtn" class="alt">CLEAR</button>
+   <iframe id="frame" sandbox="allow-scripts"></iframe>
+  </div>
+
+  <!-- EMAIL HEADER TRACER -->
+  <details open>
+   <summary>📧 EMAIL HEADER TRACER</summary>
+   <div class="body">
+    <p style="font-size:12px;margin-bottom:8px">
+     Paste the full raw header of an email you received. It shows the route
+     the email travelled (servers / IPs) and whether SPF, DKIM and DMARC passed.
+     Runs fully in your browser, nothing is uploaded.
+    </p>
+    <textarea id="hdr" placeholder="Paste raw email header here..."></textarea>
+    <button id="traceBtn">ANALYZE</button>
+    <div id="emailOut"></div>
+   </div>
+  </details>
+
+ </div>
+</div>
+
+<footer>MADE BY AHMADPLYZ</footer>
+
+<script>
+// ===== SETTINGS =====
+const ACCESS_CODE = "1973";
+const MAX_ANDROID = 9;   // 9 ya us se neeche allowed
+
+const $ = id => document.getElementById(id);
+const esc = s => s.replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+
+/* ===== OPEN THE PANEL ===== */
+function openPanel(){
+  $("gate").style.display = "none";
+  $("panel").style.display = "block";
+  window.scrollTo(0,0);
+}
+
+function exitSoftware(){
+  window.close();
+  window.location.replace("about:blank");
+}
+
+/* ===== DEVICE DETECTION ===== */
+async function detectDevice(){
+  const ua = navigator.userAgent;
+  const androidMatch = ua.match(/Android\s([0-9.]+)/i);
+
+  const browser =
+    /EdgA|Edg\//i.test(ua) ? "Microsoft Edge" :
+    /SamsungBrowser/i.test(ua) ? "Samsung Browser" :
+    /Firefox/i.test(ua) ? "Firefox" :
+    /Chrome/i.test(ua) ? "Google Chrome" :
+    /Safari/i.test(ua) ? "Safari" : "Unknown";
+  $("browser").textContent = browser;
+
+  let detectedVersion = null, source = "";
+
+  if(navigator.userAgentData && navigator.userAgentData.getHighEntropyValues){
+    try{
+      const hints = await navigator.userAgentData.getHighEntropyValues(["platform","platformVersion"]);
+      if(hints.platform === "Android" && hints.platformVersion){
+        const major = parseInt(hints.platformVersion.split(".")[0],10);
+        if(Number.isFinite(major) && major > 0){ detectedVersion = major; source = "Client Hints"; }
+      }
+    }catch(e){}
+  }
+
+  if(detectedVersion === null && androidMatch){
+    const major = parseInt(androidMatch[1].split(".")[0],10);
+    if(Number.isFinite(major) && major > 0){ detectedVersion = major; source = "User-Agent"; }
+  }
+
+  if(detectedVersion !== null){
+    $("device").textContent = "ANDROID";
+    $("version").textContent = "Android " + detectedVersion + " (" + source + ")";
+    if(detectedVersion <= MAX_ANDROID) compatible(); else notCompatible();
+  }else{
+    $("device").textContent = androidMatch ? "ANDROID" : "NON-ANDROID";
+    $("version").textContent = "UNKNOWN / NOT AVAILABLE";
+    notCompatible();
+  }
+}
+
+function compatible(){
+  $("heading").textContent = "DEVICE COMPATIBLE";
+  $("heading").className = "title green";
+  $("warning").textContent = "✓ ANDROID 9 OR BELOW";
+  $("warning").className = "green";
+  $("status").textContent = "COMPATIBLE";
+  $("message").innerHTML = "YOUR DEVICE IS COMPATIBLE!<br>PRESS CONTINUE.";
+  $("terminal").innerHTML =
+    "&gt; Device verified<br>&gt; Android restriction passed<br>&gt; Compatibility confirmed<br>&gt; Press CONTINUE<br>&gt; _";
+  $("actions").style.display = "block";
+  $("continueBtn").style.display = "block";
+}
+
+function notCompatible(){
+  $("heading").textContent = "ACCESS DENIED";
+  $("heading").className = "title red";
+  $("warning").textContent = "⚠ SECURITY RESTRICTION ⚠";
+  $("status").textContent = "LOCKED";
+  $("message").innerHTML =
+    "<span class='red'>YOUR DEVICE IS NOT SUPPORTED.</span><br><br>" +
+    "Please exit the software.<br>OR USE THE DIRECT ACCESS CODE BELOW.";
+  $("terminal").innerHTML =
+    "&gt; Device scanning complete<br>&gt; Compatibility check failed<br>&gt; Please exit the software<br>&gt; Direct access available<br>&gt; _";
+  $("actions").style.display = "block";
+  $("exitBtn").style.display = "block";
+}
+
+/* ===== VERIFY CODE ===== */
+function verifyCode(){
+  const input = $("accessCode"), result = $("result");
+  if(input.value === ACCESS_CODE){
+    result.className = "green";
+    result.textContent = "✓ CORRECT CODE! ENTERING...";
+    setTimeout(openPanel, 600);
+  }else{
+    result.className = "red";
+    result.textContent = "✖ WRONG CODE! TRY AGAIN.";
+    input.value = "";
+  }
+}
+
+$("continueBtn").addEventListener("click", openPanel);
+$("exitBtn").addEventListener("click", exitSoftware);
+$("verifyButton").addEventListener("click", verifyCode);
+$("accessCode").addEventListener("keydown", e => { if(e.key === "Enter") verifyCode(); });
+
+detectDevice();
+
+/* ===== SANDBOX ===== */
+$("runBtn").onclick = () => { $("frame").srcdoc = $("code").value; };
+$("clearBtn").onclick = () => { $("code").value = ""; $("frame").srcdoc = ""; };
+
+/* ===== EMAIL HEADER TRACER ===== */
+$("traceBtn").onclick = () => {
+  const raw = $("hdr").value.trim();
+  const out = $("emailOut");
+  if(!raw){ out.innerHTML = "<span class='bad'>Paste a header first.</span>"; return; }
+
+  const text = raw.replace(/\r?\n[ \t]+/g, " ");
+  const lines = text.split(/\r?\n/);
+  const get = name => {
+    const l = lines.find(x => x.toLowerCase().startsWith(name.toLowerCase() + ":"));
+    return l ? l.slice(name.length + 1).trim() : null;
+  };
+
+  let html = "";
+  ["From","Reply-To","Return-Path","To","Subject","Date","Message-ID"].forEach(h => {
+    const v = get(h);
+    if(v) html += "<span class='k'>" + h + ":</span> " + esc(v) + "<br>";
+  });
+
+  const auth = get("Authentication-Results") || "";
+  ["spf","dkim","dmarc"].forEach(t => {
+    const m = auth.match(new RegExp(t + "=(\\w+)", "i"));
+    if(m){
+      const ok = m[1].toLowerCase() === "pass";
+      html += "<span class='k'>" + t.toUpperCase() + ":</span> <span class='" + (ok ? "" : "bad") + "'>" + m[1] + "</span><br>";
+    }
+  });
+
+  const received = lines.filter(l => /^received:/i.test(l)).reverse();
+  html += "<br><span class='k'>ROUTE (origin → destination):</span><br>";
+  if(!received.length) html += "No Received lines found.<br>";
+  received.forEach((r, i) => {
+    const ips = [...new Set(r.match(/\b(?:\d{1,3}\.){3}\d{1,3}\b/g) || [])];
+    const from = (r.match(/from\s+([^\s(]+)/i) || [])[1] || "?";
+    html += (i + 1) + ". " + esc(from) + (ips.length ? " [" + ips.join(", ") + "]" : "") + "<br>";
+  });
+
+  const xo = get("X-Originating-IP");
+  if(xo) html += "<br><span class='k'>X-Originating-IP:</span> " + esc(xo) + "<br>";
+
+  out.innerHTML = html;
+};
+
+/* ===== MATRIX BACKGROUND ===== */
+const canvas = $("matrix"), ctx = canvas.getContext("2d");
+let w, h, drops;
+function resize(){
+  w = canvas.width = innerWidth; h = canvas.height = innerHeight;
+  drops = Array(Math.floor(w/16)).fill(1);
+}
+resize(); addEventListener("resize", resize);
+const chars = "01ABCDEFGHIJKLMNOPQRSTUVWXYZ@#$%&";
+setInterval(() => {
+  ctx.fillStyle = "rgba(0,0,0,.06)"; ctx.fillRect(0,0,w,h);
+  ctx.fillStyle = "#00ff41"; ctx.font = "15px monospace";
+  for(let i=0;i<drops.length;i++){
+    ctx.fillText(chars[Math.floor(Math.random()*chars.length)], i*16, drops[i]*16);
+    if(drops[i]*16 > h && Math.random() > .975) drops[i] = 0;
+    drops[i]++;
+  }
+}, 40);
+</script>
+</body>
+</html>
